@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Countdown Timer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #6c63ff, #8a2be2);
+      color: white;
+    }
+
+    .timer-container {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    input, button {
+      padding: 10px;
+      margin: 10px 5px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+    }
+
+    input[type="datetime-local"] {
+      width: 70%;
+    }
+
+    button {
+      cursor: pointer;
+      background: #ffcc00;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #ffaa00;
+    }
+
+    .countdown {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+      font-size: 1.5rem;
+    }
+
+    .countdown div {
+      text-align: center;
+    }
+
+    .countdown span {
+      display: block;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    @media (max-width: 500px) {
+      .countdown {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="timer-container">
+    <h1>Countdown Timer</h1>
+    <input type="datetime-local" id="datetime" />
+    <button onclick="startTimer()">Start</button>
+    <button onclick="resetTimer()">Reset</button>
+
+    <div class="countdown" id="countdown">
+      <div><span id="days">0</span>Days</div>
+      <div><span id="hours">0</span>Hours</div>
+      <div><span id="minutes">0</span>Minutes</div>
+      <div><span id="seconds">0</span>Seconds</div>
+    </div>
+  </div>
+
+  <script>
+    let countdownInterval;
+
+    function startTimer() {
+      const input = document.getElementById("datetime").value;
+      if (!input) {
+        alert("Please select a date and time!");
+        return;
+      }
+      const targetDate = new Date(input).getTime();
+
+      clearInterval(countdownInterval);
+
+      countdownInterval = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        if (distance <= 0) {
+          clearInterval(countdownInterval);
+          document.getElementById("countdown").innerHTML = "<h2>Time's Up!</h2>";
+          return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById("days").innerText = days;
+        document.getElementById("hours").innerText = hours;
+        document.getElementById("minutes").innerText = minutes;
+        document.getElementById("seconds").innerText = seconds;
+      }, 1000);
+    }
+
+    function resetTimer() {
+      clearInterval(countdownInterval);
+      document.getElementById("days").innerText = 0;
+      document.getElementById("hours").innerText = 0;
+      document.getElementById("minutes").innerText = 0;
+      document.getElementById("seconds").innerText = 0;
+      document.getElementById("datetime").value = "";
+    }
+  </script>
+</body>
+</html>
